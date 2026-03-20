@@ -1,15 +1,21 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  // ここにステップ1でメモした自分の設定を貼り付けます
-  apiKey: "AIzaSyA-05sDZht2uyoNWz7aE9hpP_R-d2XYhto",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyB5K73evEk33c3VIOlIEkOz2c1IRAiltWM",
+  authDomain: "fusakui-db.firebaseapp.com",
+  projectId: "fusakui-db",
+  storageBucket: "fusakui-db.firebasestorage.app",
+  messagingSenderId: "520726255572",
+  appId: "1:520726255572:web:abb29154d5b26e3fdd2841",
+  measurementId: "G-BV3RS60149"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const analytics = getAnalytics(app);
