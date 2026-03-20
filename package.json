@@ -18,22 +18,3 @@
     "vite": "^5.0.0"
   }
 }
-// App.jsx の中に以下の処理を追加
-const [aiAnalysis, setAiAnalysis] = useState(null);
-const [isLoading, setIsLoading] = useState(false);
-
-const runAiAnalysis = async () => {
-  setIsLoading(true);
-  try {
-    const res = await fetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description: formData.description })
-    });
-    const result = await res.json();
-    setAiAnalysis(result);
-  } catch (error) {
-    alert("AI解析に失敗しました。");
-  }
-  setIsLoading(false);
-};
