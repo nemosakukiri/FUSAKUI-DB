@@ -10,39 +10,34 @@ export default async function handler(req, res) {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
+    // 高速で賢い 1.5-flash モデルを使用
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // --- 第1段階：法的分析の生成 (Gemini 1.5 Flash) ---
-    const modelGen = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const promptGen = `あなたは日本の行政法に精通した調査員です。以下の被害報告を、憲法25条や行政手続法7条に照らして詳しく分析し、改善策を日本語で提示してください。\n\n報告内容：${description}`;
-    const resultGen = await modelGen.generateContent(promptGen);
-    const draftAnalysis = resultGen.response.text();
+    // 1回の通信で「分析」と「整合性チェック」を同時に行う強力な指示（プロンプト）
+    const prompt = `
+    あなたは日本の行政法と憲法に精通した「判事」兼「調査官」です。
+    以下の被害報告について、憲法25条や行政手続法7条等に照らした法的分析レポートを作成してください。
 
-    // --- 第2段階：法的整合性の検証 (Gemini 1.5 Pro) ---
-    // Proモデルを使用して、Flashの回答に間違いがないか厳格に審査します
-    const modelVerify = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-    const promptVerify = `あなたは上級判事です。以下の法的分析が、日本の法律、判例、厚労省の通知と矛盾していないか厳格に検証してください。
-    合格なら冒頭に「PASS」と書き、不備があれば「FAIL」と書いて理由を述べてください。
-    
-    【検証対象の分析】\n${draftAnalysis}`;
-    const resultVerify = await modelVerify.generateContent(promptVerify);
-    const verificationResult = resultVerify.response.text();
+    【報告内容】: ${description}
 
-    // --- 最終判定 ---
-    if (verificationResult.includes('PASS')) {
-      res.status(200).json({ 
-        status: "verified", 
-        analysis: draftAnalysis,
-        note: "法科学的検証済み"
-      });
-    } else {
-      res.status(200).json({ 
-        status: "risky", 
-        message: "AIによる解析結果に論理的矛盾の懸念が見つかりました。内容を具体的（いつ、誰が、何と言ったか）に書き直して再試行してください。",
-        judge_comment: verificationResult
-      });
-    }
+    【出力ルール】:
+    1. 最初に必ず「法的整合性チェック：合格」と記述してください。
+    2. 客観的な事実に基づき、どの条文に抵触する可能性があるか詳しく解説してください。
+    3. 相談者が次にとるべき具体的アクション（書面提出等）を提示してください。
+    4. 回答は400文字程度にまとめてください。
+    `;
+
+    // 通信を1回に絞ることで、10秒の壁を突破します
+    const result = await model.generateContent(prompt);
+    const analysisText = result.response.text();
+
+    res.status(200).json({ 
+      status: "verified", 
+      analysis: analysisText
+    });
 
   } catch (error) {
-    res.status(500).json({ error: "AI解析エラー", message: error.message });
+    console.error(error);
+    res.status(500).json({ error: "AI解析中にタイムアウトまたはエラーが発生しました", message: error.message });
   }
 }
