@@ -1,7 +1,6 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// あなたのFirebase設定（以前取得したものです）
 const firebaseConfig = {
   apiKey: "AIzaSyB5K73evEK33c3VIOlIEkOz2c1IRAiltWM",
   authDomain: "fusakui-db.firebaseapp.com",
@@ -11,5 +10,6 @@ const firebaseConfig = {
   appId: "1:520726255572:web:1d3151dfb01c36ccdf3211"
 };
 
-const app = initializeApp(firebaseConfig);
+// 安全に初期化
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const db = getFirestore(app);
