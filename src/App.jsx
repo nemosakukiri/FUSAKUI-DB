@@ -32,7 +32,7 @@ export default function App() {
 
   const runDirectAIAnalysis = async () => {
     // 【重要】ここにご自身の動くAPIキーを貼り付けてください
-    const API_KEY = "AIzaSyB5K73evEK33c3VIOlIEkOz2c1IRAiltWM"; 
+    const API_KEY = "AIzaSyBylSlz1LBQEtSAfv1KIUn9izfAVE_1-YY"; 
 
     try {
       const genAI = new GoogleGenerativeAI(API_KEY);
