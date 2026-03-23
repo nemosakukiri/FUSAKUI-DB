@@ -19,7 +19,7 @@ export default function App() {
   const runDirectAIAnalysis = async () => {
     // Vercelの設定にある鍵を読み込みます（Viteの仕組みで読み込めるようにします）
     // ※もし動かない場合は、ここに直接 "AIza..." を書いてもOKです（自分専用サイトなので）
-    const API_KEY = "AIzaSyB5K73evEK33c3VIOlIEkOz2c1IRAiltWM"; 
+    const API_KEY = "AIzaSyBylSlz1LBQEtSAfv1KIUn9izfAVE_1-YY"; 
 
     try {
       const genAI = new GoogleGenerativeAI(API_KEY);
